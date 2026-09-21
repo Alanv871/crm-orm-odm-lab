@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+const http = require('http');
+const app = require('../app');
+const { connect: connectSequelize, close: closeSequelize } = require('../config/sequelize');
+const { connect: connectMongoose, close: closeMongoose } = require('../config/mongoose');
+const { sequelize } = require('../models/sequelize');
+
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+const server = http.createServer(app);
+
+function normalizePort(val) {
+  const value = parseInt(val, 10);
+  return Number.isNaN(value) || value < 0 ? 3000 : value;
+}
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  if (error.code === 'EADDRINUSE') {
+    console.error(`El puerto ${port} ya esta en uso`);
+    process.exit(1);
+  }
+
+  throw error;
+}
+
+async function start() {
+  console.log('Conectando a PostgreSQL y MongoDB...');
+  await connectSequelize();
+  await connectMongoose();
+  await sequelize.sync();
+
+  server.on('error', onError);
+  server.listen(port, () => {
+    console.log(`API escuchando en el puerto ${port}`);
+  });
+}
+
+async function shutdown() {
+  server.close();
+  await closeSequelize();
+  await closeMongoose();
+  process.exit(0);
+}
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
+
+start().catch((err) => {
+  console.error('No fue posible iniciar la API:', err.message);
+  process.exit(1);
+});

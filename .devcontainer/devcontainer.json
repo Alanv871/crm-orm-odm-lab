@@ -1,0 +1,22 @@
+{
+  "name": "CRM ORM/ODM Lab",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": { "label": "CRM API" }
+  },
+  "postCreateCommand": "npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "orta.vscode-jest",
+        "ms-ossdata.vscode-pgsql",
+        "mongodb.mongodb-vscode"
+      ]
+    }
+  }
+}
