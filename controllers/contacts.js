@@ -2,8 +2,8 @@ const { Contact } = require('../models/sequelize');
 
 async function getAll(req, res) {
   // TODO CHALLENGE 01: recuperar todos los contactos con Sequelize
-  const contacts = [];
-
+  const where = {};
+  const contacts = await Contact.findAll({ where, order: [['id', 'ASC']] });
   res.status(200).json(contacts);
 }
 
