@@ -34,15 +34,15 @@ async function create(req, res) {
 async function update(req, res) {
   // TODO CHALLENGE 08: revisar la operación de actualización
   try{
-  const activity = await Activity.findByIdAndUpdate(req.params.id, req.body, 
-    { new: true, runValidators: true }
-  );
+    const activity = await Activity.findByIdAndUpdate(req.params.id, req.body, 
+      { new: true, runValidators: true }
+    );
 
-  if (!activity) {
-    return res.status(404).json({ error: 'Activity not found' });
-  }
+    if (!activity) {
+      return res.status(404).json({ error: 'Activity not found' });
+    }
 
-  res.status(200).json(activity);
+    res.status(200).json(activity);
 
   } catch (err) {
     console.error(err);

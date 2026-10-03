@@ -155,5 +155,28 @@ R. porque userId y contactId viven en la base de datos de sequelize (SQL), como 
 de tu corrección y por qué? ¿Qué cambiaste para que devolviera el documento
 actualizado?
 
-R. 
+R. La actualización devolvía el documento sin modificar, la actualización si ocurre, solo que findByIdAndUpdate devuelve por defecto el documento antes de la actualización, agregando la opción new: true, se aclara que lo que se quiere es que findByIdAndUpdate devuelva el documento actualizado, además se agregó runValidators para validar que la actualización no contenga errores como un tipo de dato que no corresponde, esto se complementa con el try-catch que maneja el caso en el que se detecte un error rechazando la solicitud.
+
+
+10. Pruebas de comportamiento. Las pruebas no verifican que uses findAll() ni
+find(), sino la respuesta de la API. ¿Qué ventaja tiene probar el comportamiento
+en lugar de la implementación?
+
+R. Hay varias ventajas en este comportamiento, sirve para que no haya rigidez, dado que existen múltiples formas de solucionar un problema, sería mucho más difícil hacer correcciones si el test esperara una solución en específico y bloqueara todas las demás, esto también permite hacer refactorizaciones sin romper los tests y que los tests sirvan para varias soluciones.
+
+
+11. Repetibilidad. ¿Qué hace tests/setup.js antes y después de cada suite y por
+qué es necesario para que npm test dé el mismo resultado cada vez que se ejecuta?
+
+R. Antes de la suite se conecta con sequelize y mongoose para poder realizar el test y luego de ejecutarlo vuelve a tener los datos conocidos para evitar sobreescribirse y con ello afectar a los futuros tests, finalmente cierra la conexión con sequelize y mongoose, esto se llama "aislamiento entre tests".
+
+
+12. Tu experiencia. ¿Cuál fue el reto más difícil y qué hiciste para resolverlo? Describe
+un error o mensaje de fallo de Jest que te ayudó a encontrar el problema.
+
+R. Creo que el desafió que más me costó fué el número 5: incluir los contactos de una compañía, debido a que me hizo moverme entre archivos para averiguar el alias que tenía que usar, además, muchas veces me resulta confuso cuando la misma palabra con pequeñas diferencias se usa para elementos diferentes (algo que pasa mucho en desarrollo de aplicaciones web), en este caso el error en terminal me delató que el modelo era incorrecto porque me había faltado la mayúscula al inicio.
+
+
+## Evidencia
+
 
