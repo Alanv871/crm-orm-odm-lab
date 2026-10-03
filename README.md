@@ -126,3 +126,34 @@ R. La relación se basa en que una compañía tiene varios contactos, mientras q
 5. Eager loading. En el Reto 05, ¿qué diferencia habría entre traer la compañía
 y luego hacer una segunda consulta para sus contactos, y traerlos en la misma
 consulta con include? ¿Cuál es preferible y por qué?
+
+R. Es preferible hacer una sola consulta con include, debido a que cada consulta tiene una latencia de red, asi que es mejor solo pagar esa latencia una vez, además así se evita la necesidad de unir ambas consultas a mano, reduciendo la complejidad de la consulta y aumentando la comsistencia de datos.
+
+
+6. Instancia vs consulta. En update de contactos primero se busca el registro y
+luego se modifica. Compara ese enfoque con hacer un Model.update({...}, {
+where }) directo: ¿qué ventaja tiene cada uno? (Pista: ¿qué devuelve cada uno?)
+
+R. Usando update y luego actualizando tienes dos consultas y obtienes también el registro de memoria, lo que permite una autenticación mas limpia en caso de que el registro no exista, además solo se actualizan los campos que cambiaron, mientras que where utiliza solo una consulta, pero no devuelve el registro, solo la cantidad de filas afectadas, para obtener el registro actualizado habría que hacer un findByPk.
+
+
+7. Esquema flexible. ¿Qué tipo de dato se usa para metadata en models/mongoose/
+activity.js y por qué permite guardar estructuras distintas para CALL, EMAIL y
+MEETING? ¿Qué desventaja tiene frente a definir cada campo con su tipo?
+
+R. Se usa mongoose.Schema.Types.Mixed, mixed desactiva la comprobación del tipo de dato del campo en mongoose, así que acepta objetos de cualquier estructura, la desventaja de mixed es que se vuleve susceptible a errores como typos o tipos de dato no correspondientes (como un string donde debería haber un int) debido a la falta de verificación, por lo que se debe tener cuidado a la hora de definir campos.
+
+
+8. Sin ref. contactId y userId en Activity son números y no usan ref. ¿Por qué
+no se puede usar ref/populate aquí? ¿Qué consecuencia tiene para la integridad
+de los datos (por ejemplo, si se elimina un User en PostgreSQL)?
+
+R. porque userId y contactId viven en la base de datos de sequelize (SQL), como ref y populate son  mecanismos internos de la base de datos de mongodb no funcionan en la base de datos SQL. Eliminar algo en postgreSQL (como un User) y tiene claves foráneas asociadas, se ve como una amenaza para la integridad de las relaciones y se bloquea la acción para garantizar la consistencia.
+
+
+9. Documento actualizado. En el Reto 08, ¿qué devolvía la actualización antes
+de tu corrección y por qué? ¿Qué cambiaste para que devolviera el documento
+actualizado?
+
+R. 
+
